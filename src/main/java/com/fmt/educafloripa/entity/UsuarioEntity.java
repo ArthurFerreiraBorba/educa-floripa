@@ -5,13 +5,18 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "papeis")
-public class PapelEntity {
+@Table(name = "usuarios")
+public class UsuarioEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nome;
+    private String login;
 
+    private String senha;
+
+    @ManyToOne
+    @JoinColumn(name = "papel_id")
+    private PapelEntity papel;
 }
