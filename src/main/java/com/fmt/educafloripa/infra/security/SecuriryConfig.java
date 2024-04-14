@@ -41,8 +41,8 @@ public class SecuriryConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/cadastro").permitAll()
+                        .requestMatchers(HttpMethod.POST, "usuarios/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "usuarios/cadastro").permitAll()
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
@@ -56,6 +56,7 @@ public class SecuriryConfig {
         return NimbusJwtDecoder.withPublicKey(pub).build();
     }
 
+    @Bean
     JwtEncoder jwtEncoder() {
         JWK jwk = new RSAKey.Builder(this.pub).privateKey(this.priv).build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
