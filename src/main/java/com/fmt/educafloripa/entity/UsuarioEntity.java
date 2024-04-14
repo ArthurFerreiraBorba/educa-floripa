@@ -19,4 +19,11 @@ public class UsuarioEntity {
     @ManyToOne
     @JoinColumn(name = "papel_id")
     private PapelEntity papel;
+
+    public UsuarioEntity() {};
+    public UsuarioEntity(String login, String senha, PapelEntity papel){
+        this.login = login;
+        this.senha = senha;
+        this.papel = papel;
+    };
 }
