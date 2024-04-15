@@ -9,3 +9,10 @@ CREATE TABLE IF NOT EXISTS usuarios (
     senha VARCHAR(60) NOT NULL UNIQUE,
     papel_id BIGINT NOT NULL REFERENCES papeis(id)
 );
+
+CREATE TABLE IF NOT EXISTS docentes (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    dataEntrada DATE NOT NULL DEFAULT current_date,
+    usuario_id BIGINT NOT NULL UNIQUE REFERENCES usuarios(id)
+);
