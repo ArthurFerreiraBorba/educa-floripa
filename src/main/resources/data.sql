@@ -13,3 +13,11 @@ SELECT 'admin', '$2a$12$1lfFh4oMZCxZhGrWpQ7Kyelr7nEGYC/EoZmNrtMbQJYWJgTsWfCJ.', 
 WHERE NOT EXISTS (
     SELECT 1 FROM usuarios WHERE papel_id = 1
 );
+
+INSERT INTO docentes (nome, usuario_id)
+SELECT 'admin', id
+FROM usuarios
+WHERE login = 'admin'
+AND NOT EXISTS (
+    SELECT 1 FROM docentes WHERE usuario_id = 1
+);
