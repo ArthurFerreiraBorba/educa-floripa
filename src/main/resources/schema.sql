@@ -16,3 +16,8 @@ CREATE TABLE IF NOT EXISTS docentes (
     dataEntrada DATE NOT NULL DEFAULT current_date,
     usuario_id BIGINT NOT NULL UNIQUE REFERENCES usuarios(id)
 );
+
+CREATE TABLE IF NOT EXISTS cursos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(250) NOT NULL UNIQUE
+);
