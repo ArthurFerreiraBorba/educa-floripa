@@ -34,3 +34,11 @@ CREATE TABLE IF NOT EXISTS turmas (
     professor_id BIGINT NOT NULL REFERENCES docentes(id),
     curso_id BIGINT NOT NULL REFERENCES cursos(id)
 );
+
+CREATE TABLE IF NOT EXISTS alunos (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    dataNascimento DATE NOT NULL,
+    turma_id BIGINT NOT NULL REFERENCES turmas(id),
+    usuario_id BIGINT NOT NULL UNIQUE REFERENCES usuarios(id)
+);
