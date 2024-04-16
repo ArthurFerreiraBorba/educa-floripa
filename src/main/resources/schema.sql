@@ -27,3 +27,10 @@ CREATE TABLE IF NOT EXISTS materias (
     nome VARCHAR(150) NOT NULL UNIQUE,
     curso_id BIGINT NOT NULL REFERENCES cursos(id)
 );
+
+CREATE TABLE IF NOT EXISTS turmas (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    professor_id BIGINT NOT NULL REFERENCES docentes(id),
+    curso_id BIGINT NOT NULL REFERENCES cursos(id)
+);
