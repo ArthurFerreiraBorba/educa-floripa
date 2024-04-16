@@ -42,3 +42,12 @@ CREATE TABLE IF NOT EXISTS alunos (
     turma_id BIGINT NOT NULL REFERENCES turmas(id),
     usuario_id BIGINT NOT NULL UNIQUE REFERENCES usuarios(id)
 );
+
+CREATE TABLE IF NOT EXISTS notas (
+    id SERIAL PRIMARY KEY,
+    valor NUMERIC(3, 2) NOT NULL DEFAULT 0.00,
+    dataCriacao DATE NOT NULL DEFAULT current_date,
+    aluno_id BIGINT NOT NULL REFERENCES alunos(id),
+    professor_id BIGINT NOT NULL REFERENCES docentes(id),
+    materia_id BIGINT NOT NULL REFERENCES materias(id)
+);
