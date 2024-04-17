@@ -1,4 +1,4 @@
-package com.fmt.educafloripa.contrller.dto.request;
+package com.fmt.educafloripa.controller.dto.request;
 
 public record LoginRequest(String login, String senha) {
 }

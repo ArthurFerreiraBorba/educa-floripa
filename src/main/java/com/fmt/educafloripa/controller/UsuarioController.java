@@ -1,9 +1,9 @@
-package com.fmt.educafloripa.contrller;
+package com.fmt.educafloripa.controller;
 
-import com.fmt.educafloripa.contrller.dto.request.CadastroRequest;
-import com.fmt.educafloripa.contrller.dto.request.LoginRequest;
-import com.fmt.educafloripa.contrller.dto.responce.CadastroResponse;
-import com.fmt.educafloripa.contrller.dto.responce.LoginResponse;
+import com.fmt.educafloripa.controller.dto.request.CadastroRequest;
+import com.fmt.educafloripa.controller.dto.request.LoginRequest;
+import com.fmt.educafloripa.controller.dto.response.CadastroResponse;
+import com.fmt.educafloripa.controller.dto.response.LoginResponse;
 import com.fmt.educafloripa.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
