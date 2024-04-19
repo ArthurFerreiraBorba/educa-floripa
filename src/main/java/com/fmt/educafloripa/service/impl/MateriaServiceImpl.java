@@ -6,18 +6,21 @@ import com.fmt.educafloripa.entity.CursoEntity;
 import com.fmt.educafloripa.entity.MateriaEntity;
 import com.fmt.educafloripa.infra.generics.GenericService;
 import com.fmt.educafloripa.repository.MateriaRepository;
-import com.fmt.educafloripa.service.CursoService;
 import com.fmt.educafloripa.service.MateriaService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class MateriaServiceImpl extends GenericService<MateriaEntity, MateriaResponse, MateriaRequest> implements MateriaService {
 
     public final CursoServiceImpl cursoService;
+    public final MateriaRepository repository;
 
     public MateriaServiceImpl(MateriaRepository repository, CursoServiceImpl cursoService) {
         super(repository);
         this.cursoService = cursoService;
+        this.repository = repository;
     }
 
     @Override
@@ -29,5 +32,12 @@ public class MateriaServiceImpl extends GenericService<MateriaEntity, MateriaRes
     protected MateriaEntity paraEntity(MateriaRequest requestDto) {
         CursoEntity curso = cursoService.pegarEntityPorId(requestDto.curso());
         return new MateriaEntity(requestDto, curso);
+    }
+
+    @Override
+    public List<MateriaResponse> pegarMateriaPorCurso(Long idCurso) {
+        CursoEntity curso = cursoService.pegarEntityPorId(idCurso);
+
+        return repository.findAllByCurso(curso).stream().map(this::paraDto).toList();
     }
 }
