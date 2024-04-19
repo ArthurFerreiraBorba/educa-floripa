@@ -1,9 +1,9 @@
 package com.fmt.educafloripa.service.impl;
 
-import com.fmt.educafloripa.contrller.dto.request.CadastroRequest;
-import com.fmt.educafloripa.contrller.dto.request.LoginRequest;
-import com.fmt.educafloripa.contrller.dto.responce.CadastroResponse;
-import com.fmt.educafloripa.contrller.dto.responce.LoginResponse;
+import com.fmt.educafloripa.controller.dto.request.CadastroRequest;
+import com.fmt.educafloripa.controller.dto.request.LoginRequest;
+import com.fmt.educafloripa.controller.dto.response.CadastroResponse;
+import com.fmt.educafloripa.controller.dto.response.LoginResponse;
 import com.fmt.educafloripa.entity.PapelEntity;
 import com.fmt.educafloripa.entity.UsuarioEntity;
 import com.fmt.educafloripa.repository.PapelRepository;
@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.Optional;
+
+import static com.fmt.educafloripa.infra.Util.NumeroUtil.eNumero;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -90,12 +92,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         return bCryptPasswordEncoder.matches(loginrequest.senha(), usuario.getSenha());
     }
 
-    private boolean eNumero(String texto) {
-        for (char c : texto.toCharArray()) {
-            if (!Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
+    public UsuarioEntity pegarEntityPorId(Long id) {
+        return repository.findById(id).orElseThrow();
     }
+
 }
