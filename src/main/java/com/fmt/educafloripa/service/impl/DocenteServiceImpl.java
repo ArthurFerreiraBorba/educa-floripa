@@ -8,27 +8,41 @@ import com.fmt.educafloripa.infra.generics.GenericService;
 import com.fmt.educafloripa.repository.DocenteRepository;
 import com.fmt.educafloripa.repository.UsuarioRepository;
 import com.fmt.educafloripa.service.DocenteService;
+import com.fmt.educafloripa.service.UsuarioService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DocenteServiceImpl extends GenericService<DocenteEntity, DocenteResponse, DocenteRequest> implements DocenteService {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuarioServiceImpl usuarioService;
+    private final DocenteRepository repository;
 
-    public DocenteServiceImpl(DocenteRepository repository, UsuarioRepository usuarioRepository) {
+    public DocenteServiceImpl(DocenteRepository repository, UsuarioServiceImpl usuarioService) {
         super(repository);
-        this.usuarioRepository = usuarioRepository;
+        this.usuarioService = usuarioService;
+        this.repository = repository;
     }
 
     @Override
     protected DocenteResponse paraDto(DocenteEntity entity) {
-        return new DocenteResponse(entity.getId(), entity.getNome(), entity.getDataEntrada(), entity.getId());
+        return new DocenteResponse(entity.getId(), entity.getNome(), entity.getDataEntrada(), entity.getUsuario().getId());
     }
 
     @Override
     protected DocenteEntity paraEntity(DocenteRequest requestDto) {
-        UsuarioEntity usuario = usuarioRepository.findById(requestDto.usuario()).orElseThrow();
+        UsuarioEntity usuario = usuarioService.pegarEntityPorId(requestDto.usuario());
         return new DocenteEntity(requestDto, usuario);
+    }
+
+    @Override
+    public void atualizar (DocenteRequest requestDto, Long id) {
+        DocenteEntity docenteDesatualizado =  pegarEntityPorId(id);
+        DocenteEntity docenteAtualizado = paraEntity(requestDto);
+
+        docenteAtualizado.setId(id);
+        docenteAtualizado.setDataEntrada(docenteDesatualizado.getDataEntrada());
+
+        repository.save(docenteAtualizado);
     }
 }

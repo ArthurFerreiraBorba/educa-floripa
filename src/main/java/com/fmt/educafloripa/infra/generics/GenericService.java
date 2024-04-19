@@ -22,6 +22,11 @@ public abstract class GenericService<E extends GenericEntity, RES, REQ> implemen
         return paraDto(repository.findById(id).get());
     }
 
+    public E pegarEntityPorId(Long id) {
+        entidadeExiste(id);
+        return repository.findById(id).get();
+    }
+
     public List<RES> pegarTodos() {
         return repository.findAll().stream().map(this::paraDto).toList();
     }
@@ -49,7 +54,7 @@ public abstract class GenericService<E extends GenericEntity, RES, REQ> implemen
         repository.save(entity);
     }
 
-    private void entidadeExiste(Long id) {
+    public void entidadeExiste(Long id) {
         if (!repository.existsById(id)) {
             throw new RuntimeException();
         }

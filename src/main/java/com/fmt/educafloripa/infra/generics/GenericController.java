@@ -13,12 +13,12 @@ public abstract class GenericController<S extends GenericServiceInterface<RES, R
 
     @GetMapping("buscar/{id}")
     public ResponseEntity<RES> buscarId(@PathVariable Long id) {
-        return ResponseEntity.status(201).body(service.pegarPorId(id));
+        return ResponseEntity.status(200).body(service.pegarPorId(id));
     }
 
     @GetMapping("buscar")
     public ResponseEntity<List<RES>> buscarTodas() {
-        return ResponseEntity.status(201).body(service.pegarTodos());
+        return ResponseEntity.status(200).body(service.pegarTodos());
     }
 
     @PostMapping("criar")

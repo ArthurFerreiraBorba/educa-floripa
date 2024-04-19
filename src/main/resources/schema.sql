@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS alunos (
 
 CREATE TABLE IF NOT EXISTS notas (
     id SERIAL PRIMARY KEY,
-    valor NUMERIC(3, 2) NOT NULL DEFAULT 0.00,
+    valor NUMERIC(5, 2) NOT NULL DEFAULT 0.00,
     data_criacao DATE NOT NULL DEFAULT current_date,
     aluno_id BIGINT NOT NULL REFERENCES alunos(id),
     professor_id BIGINT NOT NULL REFERENCES docentes(id),

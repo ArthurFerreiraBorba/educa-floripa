@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 @Data
 @Entity
-@Table(name = "docentes")
 @DynamicInsert
+@Table(name = "docentes")
 public class DocenteEntity extends GenericEntity {
 
     private String nome;

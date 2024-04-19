@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.Optional;
 
+import static com.fmt.educafloripa.infra.Util.NumeroUtil.eNumero;
+
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
@@ -90,12 +92,8 @@ public class UsuarioServiceImpl implements UsuarioService {
         return bCryptPasswordEncoder.matches(loginrequest.senha(), usuario.getSenha());
     }
 
-    private boolean eNumero(String texto) {
-        for (char c : texto.toCharArray()) {
-            if (!Character.isDigit(c)) {
-                return false;
-            }
-        }
-        return true;
+    public UsuarioEntity pegarEntityPorId(Long id) {
+        return repository.findById(id).orElseThrow();
     }
+
 }
