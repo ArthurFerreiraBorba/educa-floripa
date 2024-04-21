@@ -5,12 +5,12 @@ import com.fmt.educafloripa.controller.dto.response.MateriaResponse;
 import com.fmt.educafloripa.infra.generics.GenericController;
 import com.fmt.educafloripa.service.MateriaService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
+
+import static com.fmt.educafloripa.infra.Util.AcessoUtil.nivelAcesso;
 
 @RestController
 @RequestMapping ("materis")
@@ -19,11 +19,13 @@ public class MateriaController extends GenericController<MateriaService, Materia
     private final MateriaService service;
 
     public MateriaController(MateriaService service) {
+        super((Arrays.asList(2L)));
         this.service = service;
     }
 
     @GetMapping("buscar/curso/{idCurso}")
-    public ResponseEntity<List<MateriaResponse>> buscarMateriaPorCurso(@PathVariable Long idCurso) {
+    public ResponseEntity<List<MateriaResponse>> buscarMateriaPorCurso(@RequestHeader(name = "Authorization") String token, @PathVariable Long idCurso) {
+        nivelAcesso(token, Arrays.asList(4L));
         return ResponseEntity.status(200).body(service.pegarMateriaPorCurso(idCurso));
     }
 }

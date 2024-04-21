@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface NotaAlunoService {
 
-    Float pegarPontuacaoTotal(Long id);
+    Float pegarPontuacaoTotal(String token);
 
     List<NotaResponse> pegarNotaPorAluno(Long idAluno);
 }

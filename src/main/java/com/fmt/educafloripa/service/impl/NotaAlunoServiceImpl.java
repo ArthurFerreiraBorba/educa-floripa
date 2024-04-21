@@ -6,6 +6,7 @@ import com.fmt.educafloripa.entity.MateriaEntity;
 import com.fmt.educafloripa.entity.NotaEntity;
 import com.fmt.educafloripa.repository.NotaRepository;
 import com.fmt.educafloripa.service.NotaAlunoService;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -15,21 +16,30 @@ import java.util.Set;
 @Service
 public class NotaAlunoServiceImpl implements NotaAlunoService {
 
+    private final JwtDecoder jwtDecoder;
+
     private final AlunoServiceImpl alunoService;
 
     private final NotaRepository notaRepository;
 
     private final NotaServiceImpl notaService;
 
-    public NotaAlunoServiceImpl(AlunoServiceImpl alunoService, NotaRepository notaRepository, NotaServiceImpl notaService) {
+    public NotaAlunoServiceImpl(JwtDecoder jwtDecoder, AlunoServiceImpl alunoService, NotaRepository notaRepository, NotaServiceImpl notaService) {
+        this.jwtDecoder = jwtDecoder;
         this.alunoService = alunoService;
         this.notaRepository = notaRepository;
         this.notaService = notaService;
     }
 
     @Override
-    public Float pegarPontuacaoTotal(Long idAluno) {
-        List<NotaEntity> notas = pegarNotaEntityPorAluno(idAluno);
+    public Float pegarPontuacaoTotal(String token) {
+
+        token = token.substring(7);
+        Long idUsuario = Long.valueOf(
+                jwtDecoder.decode(token).getClaims().get("sub").toString()
+        );
+
+        List<NotaEntity> notas = pegarNotaEntityPorAluno(idUsuario);
 
         Set<MateriaEntity> materias = new HashSet<>();
         Float pontuacao = 0f;
@@ -44,11 +54,12 @@ public class NotaAlunoServiceImpl implements NotaAlunoService {
 
     @Override
     public List<NotaResponse> pegarNotaPorAluno(Long idAluno) {
-        return pegarNotaEntityPorAluno(idAluno).stream().map(notaService::paraDto).toList();
+        AlunoEntity aluno = alunoService.pegarEntityPorId(idAluno);
+        return notaRepository.findAllByAluno(aluno).stream().map(notaService::paraDto).toList();
     }
 
-    public List<NotaEntity> pegarNotaEntityPorAluno(Long idAluno) {
-        AlunoEntity aluno = alunoService.pegarEntityPorId(idAluno);
+    private List<NotaEntity> pegarNotaEntityPorAluno(Long idUsuario) {
+        AlunoEntity aluno = alunoService.pegarPorIdUsuario(idUsuario);
 
         return notaRepository.findAllByAluno(aluno);
     }

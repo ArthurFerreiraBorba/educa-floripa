@@ -1,5 +1,6 @@
 package com.fmt.educafloripa.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fmt.educafloripa.controller.dto.request.DocenteRequest;
 import com.fmt.educafloripa.infra.generics.GenericEntity;
 import jakarta.persistence.*;
@@ -19,6 +20,7 @@ public class DocenteEntity extends GenericEntity {
 
     private LocalDate dataEntrada;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "usuario_id")
     private UsuarioEntity usuario;

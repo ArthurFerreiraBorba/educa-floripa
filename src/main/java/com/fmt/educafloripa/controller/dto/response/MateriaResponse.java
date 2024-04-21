@@ -1,4 +1,6 @@
 package com.fmt.educafloripa.controller.dto.response;
 
-public record MateriaResponse(Long id, String nome, Long curso){
+import com.fmt.educafloripa.entity.CursoEntity;
+
+public record MateriaResponse(Long id, String nome, CursoEntity curso){
 }
