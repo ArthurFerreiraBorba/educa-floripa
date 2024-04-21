@@ -42,7 +42,6 @@ public class SecuriryConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "usuarios/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "usuarios/cadastro").permitAll()
                         .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))

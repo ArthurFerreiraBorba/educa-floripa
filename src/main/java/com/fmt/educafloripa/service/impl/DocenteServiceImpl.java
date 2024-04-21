@@ -26,7 +26,7 @@ public class DocenteServiceImpl extends GenericService<DocenteEntity, DocenteRes
 
     @Override
     protected DocenteResponse paraDto(DocenteEntity entity) {
-        return new DocenteResponse(entity.getId(), entity.getNome(), entity.getDataEntrada(), entity.getUsuario().getId());
+        return new DocenteResponse(entity.getId(), entity.getNome(), entity.getDataEntrada(), entity.getUsuario().getPapel().getNome());
     }
 
     @Override
@@ -44,5 +44,10 @@ public class DocenteServiceImpl extends GenericService<DocenteEntity, DocenteRes
         docenteAtualizado.setDataEntrada(docenteDesatualizado.getDataEntrada());
 
         repository.save(docenteAtualizado);
+    }
+
+    public DocenteEntity pegarPorIdUsuario(Long idUsuario) {
+        UsuarioEntity usuario = usuarioService.pegarEntityPorId(idUsuario);
+        return repository.findByUsuario(usuario);
     }
 }

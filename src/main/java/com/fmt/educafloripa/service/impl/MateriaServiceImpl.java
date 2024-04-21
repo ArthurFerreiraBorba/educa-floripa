@@ -25,7 +25,7 @@ public class MateriaServiceImpl extends GenericService<MateriaEntity, MateriaRes
 
     @Override
     protected MateriaResponse paraDto(MateriaEntity entity) {
-        return new MateriaResponse(entity.getId(), entity.getNome(), entity.getCurso().getId());
+        return new MateriaResponse(entity.getId(), entity.getNome(), entity.getCurso());
     }
 
     @Override

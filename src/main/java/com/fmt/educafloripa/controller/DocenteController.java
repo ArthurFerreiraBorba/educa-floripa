@@ -7,7 +7,12 @@ import com.fmt.educafloripa.service.DocenteService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
+
 @RestController
 @RequestMapping ("docentes")
 public class DocenteController extends GenericController<DocenteService, DocenteResponse, DocenteRequest> {
+    protected DocenteController() {
+        super((Arrays.asList(3L)));
+    }
 }

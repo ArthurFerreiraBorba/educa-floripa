@@ -6,10 +6,11 @@ import com.fmt.educafloripa.controller.dto.response.CadastroResponse;
 import com.fmt.educafloripa.controller.dto.response.LoginResponse;
 import com.fmt.educafloripa.service.UsuarioService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+
+import static com.fmt.educafloripa.infra.Util.AcessoUtil.nivelAcesso;
 
 @RestController
 @RequestMapping ("usuarios")
@@ -22,7 +23,8 @@ public class UsuarioController {
     }
 
     @PostMapping ("cadastro")
-    public ResponseEntity<CadastroResponse> cadastrarUsuario(@RequestBody CadastroRequest cadastro) {
+    public ResponseEntity<CadastroResponse> cadastrarUsuario(@RequestHeader(name = "Authorization") String token, @RequestBody CadastroRequest cadastro) {
+        nivelAcesso(token, Arrays.asList(1L));
         return ResponseEntity.status(201).body(service.cadastrarUsuario(cadastro));
     }
 

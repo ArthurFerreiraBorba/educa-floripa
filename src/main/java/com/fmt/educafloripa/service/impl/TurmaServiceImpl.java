@@ -24,13 +24,23 @@ public class TurmaServiceImpl extends GenericService<TurmaEntity, TurmaResponse,
 
     @Override
     protected TurmaResponse paraDto(TurmaEntity entity) {
-        return new TurmaResponse(entity.getId(), entity.getNome(), entity.getCurso().getId(), entity.getProfessor().getId());
+        return new TurmaResponse(entity.getId(), entity.getNome(), entity.getCurso(), entity.getProfessor());
     }
 
     @Override
     protected TurmaEntity paraEntity(TurmaRequest requestDto) {
         CursoEntity curso = cursoService.pegarEntityPorId(requestDto.curso());
         DocenteEntity docente = docenteService.pegarEntityPorId(requestDto.professor());
+
+        if (docente.getUsuario().getPapel().getId() != 4) {
+            throw new RuntimeException();
+        }
+
         return new TurmaEntity(requestDto, curso, docente);
+    }
+
+    @Override
+    public TurmaResponse criar(TurmaRequest requestDto) {
+        return super.criar(requestDto);
     }
 }
