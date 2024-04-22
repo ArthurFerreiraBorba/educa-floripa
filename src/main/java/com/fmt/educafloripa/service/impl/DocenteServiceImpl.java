@@ -4,6 +4,7 @@ import com.fmt.educafloripa.controller.dto.request.DocenteRequest;
 import com.fmt.educafloripa.controller.dto.response.DocenteResponse;
 import com.fmt.educafloripa.entity.DocenteEntity;
 import com.fmt.educafloripa.entity.UsuarioEntity;
+import com.fmt.educafloripa.infra.exception.error.InvalidRole;
 import com.fmt.educafloripa.infra.generics.GenericService;
 import com.fmt.educafloripa.repository.DocenteRepository;
 import com.fmt.educafloripa.repository.UsuarioRepository;
@@ -32,6 +33,11 @@ public class DocenteServiceImpl extends GenericService<DocenteEntity, DocenteRes
     @Override
     protected DocenteEntity paraEntity(DocenteRequest requestDto) {
         UsuarioEntity usuario = usuarioService.pegarEntityPorId(requestDto.usuario());
+
+        if (usuario.getPapel().getId() == 5) {
+            throw new InvalidRole("Usuários com papel de ALUNO não podem ser cadastrados como docente");
+        }
+
         return new DocenteEntity(requestDto, usuario);
     }
 

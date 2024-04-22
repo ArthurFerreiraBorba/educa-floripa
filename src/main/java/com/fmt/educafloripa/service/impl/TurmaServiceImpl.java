@@ -5,6 +5,7 @@ import com.fmt.educafloripa.controller.dto.response.TurmaResponse;
 import com.fmt.educafloripa.entity.CursoEntity;
 import com.fmt.educafloripa.entity.DocenteEntity;
 import com.fmt.educafloripa.entity.TurmaEntity;
+import com.fmt.educafloripa.infra.exception.error.InvalidRole;
 import com.fmt.educafloripa.infra.generics.GenericService;
 import com.fmt.educafloripa.repository.TurmaRepository;
 import com.fmt.educafloripa.service.TurmaService;
@@ -33,7 +34,7 @@ public class TurmaServiceImpl extends GenericService<TurmaEntity, TurmaResponse,
         DocenteEntity docente = docenteService.pegarEntityPorId(requestDto.professor());
 
         if (docente.getUsuario().getPapel().getId() != 4) {
-            throw new RuntimeException();
+            throw new InvalidRole("O docente precisa possuir o papel de PROFESSOR. O docente informado é um " + docente.getUsuario().getPapel().getNome());
         }
 
         return new TurmaEntity(requestDto, curso, docente);
