@@ -10,9 +10,11 @@ import com.fmt.educafloripa.repository.DocenteRepository;
 import com.fmt.educafloripa.repository.UsuarioRepository;
 import com.fmt.educafloripa.service.DocenteService;
 import com.fmt.educafloripa.service.UsuarioService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class DocenteServiceImpl extends GenericService<DocenteEntity, DocenteResponse, DocenteRequest> implements DocenteService {
 
@@ -27,6 +29,9 @@ public class DocenteServiceImpl extends GenericService<DocenteEntity, DocenteRes
 
     @Override
     protected DocenteResponse paraDto(DocenteEntity entity) {
+
+        log.info("convertendo entidade de docente para dto");
+
         return new DocenteResponse(entity.getId(), entity.getNome(), entity.getDataEntrada(), entity.getUsuario().getPapel().getNome());
     }
 
@@ -34,7 +39,10 @@ public class DocenteServiceImpl extends GenericService<DocenteEntity, DocenteRes
     protected DocenteEntity paraEntity(DocenteRequest requestDto) {
         UsuarioEntity usuario = usuarioService.pegarEntityPorId(requestDto.usuario());
 
+        log.info("convertendo dto de docente para entidade");
+
         if (usuario.getPapel().getId() == 5) {
+            log.error("usuários com o pepel de ALUNO não podem ser cadastrados como docente");
             throw new InvalidRole("Usuários com papel de ALUNO não podem ser cadastrados como docente");
         }
 
@@ -50,6 +58,8 @@ public class DocenteServiceImpl extends GenericService<DocenteEntity, DocenteRes
         docenteAtualizado.setDataEntrada(docenteDesatualizado.getDataEntrada());
 
         repository.save(docenteAtualizado);
+
+        log.info("entidade Docente atualizada com sucesso");
     }
 
     public DocenteEntity pegarPorIdUsuario(Long idUsuario) {

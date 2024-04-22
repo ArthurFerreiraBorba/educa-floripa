@@ -9,8 +9,10 @@ import com.fmt.educafloripa.infra.exception.error.InvalidRole;
 import com.fmt.educafloripa.infra.generics.GenericService;
 import com.fmt.educafloripa.repository.TurmaRepository;
 import com.fmt.educafloripa.service.TurmaService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class TurmaServiceImpl extends GenericService<TurmaEntity, TurmaResponse, TurmaRequest> implements TurmaService {
 
@@ -25,23 +27,25 @@ public class TurmaServiceImpl extends GenericService<TurmaEntity, TurmaResponse,
 
     @Override
     protected TurmaResponse paraDto(TurmaEntity entity) {
+
+        log.info("convertendo entidade turma para dto");
+
         return new TurmaResponse(entity.getId(), entity.getNome(), entity.getCurso(), entity.getProfessor());
     }
 
     @Override
     protected TurmaEntity paraEntity(TurmaRequest requestDto) {
+
+        log.info("convertendo dto turma para entidade");
+
         CursoEntity curso = cursoService.pegarEntityPorId(requestDto.curso());
         DocenteEntity docente = docenteService.pegarEntityPorId(requestDto.professor());
 
         if (docente.getUsuario().getPapel().getId() != 4) {
+            log.error("O docente precisa possuir o papel de PROFESSOR. O docente informado é um {}", docente.getUsuario().getPapel().getNome());
             throw new InvalidRole("O docente precisa possuir o papel de PROFESSOR. O docente informado é um " + docente.getUsuario().getPapel().getNome());
         }
 
         return new TurmaEntity(requestDto, curso, docente);
-    }
-
-    @Override
-    public TurmaResponse criar(TurmaRequest requestDto) {
-        return super.criar(requestDto);
     }
 }

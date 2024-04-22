@@ -4,15 +4,18 @@ import com.fmt.educafloripa.entity.UsuarioEntity;
 import com.fmt.educafloripa.infra.ApplicationContext.ApplicationContextProvider;
 import com.fmt.educafloripa.infra.exception.error.UnauthorizedRole;
 import com.fmt.educafloripa.service.impl.UsuarioServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 
 import java.util.List;
 
-
+@Slf4j
 public class AcessoUtil {
 
     public static void nivelAcesso(String token, List<Long> niveis) {
+
+        log.info("verificando nível de acesso");
 
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
 
@@ -21,6 +24,7 @@ public class AcessoUtil {
 
         if (niveis.size() == 1) {
             nivelAcesso(token, niveis.get(0), jwtDecoder, usuarioService);
+            log.info("Acesso autorizado");
             return;
         }
 
@@ -33,6 +37,7 @@ public class AcessoUtil {
 
         for (Long nivel : niveis) {
             if (usuario.getPapel().getId().equals(nivel)) {
+                log.info("Acesso autorizado");
                 return;
             }
         }
@@ -49,8 +54,10 @@ public class AcessoUtil {
 
         UsuarioEntity usuario = usuarioService.pegarEntityPorId(idUsuario);
 
-        if (usuario.getPapel().getId() > nivel) {
-            throw new UnauthorizedRole();
+        if (!(usuario.getPapel().getId() > nivel)) {
+            return;
         }
+
+        throw new UnauthorizedRole();
     }
 }

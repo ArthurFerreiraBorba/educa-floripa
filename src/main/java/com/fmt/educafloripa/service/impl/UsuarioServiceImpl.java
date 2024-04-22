@@ -12,6 +12,7 @@ import com.fmt.educafloripa.infra.exception.error.NotFoundExceptionEntity;
 import com.fmt.educafloripa.repository.PapelRepository;
 import com.fmt.educafloripa.repository.UsuarioRepository;
 import com.fmt.educafloripa.service.UsuarioService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 import static com.fmt.educafloripa.infra.Util.NumeroUtil.eNumero;
 
+@Slf4j
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
 
@@ -58,6 +60,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         UsuarioEntity usuario = new UsuarioEntity(cadastroRequest.login(), senha, papel);
 
         repository.save(usuario);
+
+        log.info("entidade usuário criada com sucesso");
+
         return toDto(usuario);
     }
 
@@ -66,7 +71,7 @@ public class UsuarioServiceImpl implements UsuarioService {
         UsuarioEntity usuario = repository.findByLogin(loginRequest.login()).orElseThrow(() -> new InvalidLogin(loginRequest.login()));
 
         if (!validarSenha(loginRequest, usuario)) {
-            throw new InvalidPassword(loginRequest.senha());
+            throw new InvalidPassword(loginRequest.senha(), loginRequest.login());
         }
 
         Instant now = Instant.now();
@@ -83,14 +88,22 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         var valorJWT = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
+        log.info("token criada com sucesso");
+
         return new LoginResponse(valorJWT, TEMPO_EXPIRACAO);
     }
 
     private CadastroResponse toDto(UsuarioEntity usuario) {
+
+        log.info("convertendo entidade usuário para dto");
+
         return new CadastroResponse(usuario.getId(), usuario.getLogin(), usuario.getPapel().getNome());
     }
 
     private boolean validarSenha(LoginRequest loginrequest, UsuarioEntity usuario) {
+
+        log.info("validando senha");
+
         return bCryptPasswordEncoder.matches(loginrequest.senha(), usuario.getSenha());
     }
 

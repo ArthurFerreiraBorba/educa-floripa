@@ -6,6 +6,7 @@ import com.fmt.educafloripa.entity.MateriaEntity;
 import com.fmt.educafloripa.entity.NotaEntity;
 import com.fmt.educafloripa.repository.NotaRepository;
 import com.fmt.educafloripa.service.NotaAlunoService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @Service
 public class NotaAlunoServiceImpl implements NotaAlunoService {
 
@@ -39,7 +41,11 @@ public class NotaAlunoServiceImpl implements NotaAlunoService {
                 jwtDecoder.decode(token).getClaims().get("sub").toString()
         );
 
+        log.info("buscando notas de aluno");
+
         List<NotaEntity> notas = pegarNotaEntityPorAluno(idUsuario);
+
+        log.info("calculando pontuação");
 
         Set<MateriaEntity> materias = new HashSet<>();
         Float pontuacao = 0f;
