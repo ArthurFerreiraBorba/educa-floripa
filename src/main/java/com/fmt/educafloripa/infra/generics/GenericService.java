@@ -1,15 +1,20 @@
 package com.fmt.educafloripa.infra.generics;
 
+import com.fmt.educafloripa.infra.exception.error.NotFoundExceptionEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 public abstract class GenericService<E extends GenericEntity, RES, REQ> implements GenericServiceInterface<RES, REQ>{
 
     private final JpaRepository<E, Long> repository;
+    private final String nomeEntity;
 
     protected GenericService(JpaRepository<E, Long> repository) {
         this.repository = repository;
+        ParameterizedType parameterizedType = (ParameterizedType) getClass().getGenericSuperclass();
+        this.nomeEntity = parameterizedType.getActualTypeArguments()[0].getTypeName().substring(28).replace("Entity", "");
     }
 
     protected abstract RES paraDto(E entity);
@@ -56,7 +61,7 @@ public abstract class GenericService<E extends GenericEntity, RES, REQ> implemen
 
     public void entidadeExiste(Long id) {
         if (!repository.existsById(id)) {
-            throw new RuntimeException();
+            throw new NotFoundExceptionEntity(nomeEntity, id);
         }
     }
 }

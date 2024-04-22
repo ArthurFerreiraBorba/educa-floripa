@@ -6,6 +6,9 @@ import com.fmt.educafloripa.controller.dto.response.CadastroResponse;
 import com.fmt.educafloripa.controller.dto.response.LoginResponse;
 import com.fmt.educafloripa.entity.PapelEntity;
 import com.fmt.educafloripa.entity.UsuarioEntity;
+import com.fmt.educafloripa.infra.exception.error.InvalidLogin;
+import com.fmt.educafloripa.infra.exception.error.InvalidPassword;
+import com.fmt.educafloripa.infra.exception.error.NotFoundExceptionEntity;
 import com.fmt.educafloripa.repository.PapelRepository;
 import com.fmt.educafloripa.repository.UsuarioRepository;
 import com.fmt.educafloripa.service.UsuarioService;
@@ -42,15 +45,14 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         repository.findByLogin(cadastroRequest.login()).ifPresent(usuario -> {throw new RuntimeException("Usuário já existe");});
 
-        Optional<PapelEntity> papelOp = eNumero(cadastroRequest.papel()) ?
-                papelRepository.findById(Long.parseLong(cadastroRequest.papel())) :
-                papelRepository.findByNome(cadastroRequest.papel().toUpperCase());
+        PapelEntity papel;
 
-        if (papelOp.isEmpty()) {
-            throw new RuntimeException("Papel não encontrado");
+        if (eNumero(cadastroRequest.papel())) {
+            papel = papelRepository.findById(Long.parseLong(cadastroRequest.papel())).orElseThrow(() -> new NotFoundExceptionEntity(PapelEntity.class.getSimpleName().replace("Entity", ""), Long.parseLong(cadastroRequest.papel())));
+        } else {
+            papel = papelRepository.findByNome(cadastroRequest.papel().toUpperCase()).orElseThrow(() -> new NotFoundExceptionEntity(PapelEntity.class.getSimpleName().replace("Entity", ""), cadastroRequest.papel()));
         }
 
-        PapelEntity papel = papelOp.get();
         String senha = bCryptPasswordEncoder.encode(cadastroRequest.senha());
 
         UsuarioEntity usuario = new UsuarioEntity(cadastroRequest.login(), senha, papel);
@@ -61,10 +63,10 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public LoginResponse criarToken(LoginRequest loginRequest) {
-        UsuarioEntity usuario = repository.findByLogin(loginRequest.login()).orElseThrow(() -> new RuntimeException("Nenhum usuário com esse login encontrado"));
+        UsuarioEntity usuario = repository.findByLogin(loginRequest.login()).orElseThrow(() -> new InvalidLogin(loginRequest.login()));
 
         if (!validarSenha(loginRequest, usuario)) {
-            throw new RuntimeException("Senha invalida");
+            throw new InvalidPassword(loginRequest.senha());
         }
 
         Instant now = Instant.now();

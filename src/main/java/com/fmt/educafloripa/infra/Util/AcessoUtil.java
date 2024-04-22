@@ -2,6 +2,7 @@ package com.fmt.educafloripa.infra.Util;
 
 import com.fmt.educafloripa.entity.UsuarioEntity;
 import com.fmt.educafloripa.infra.ApplicationContext.ApplicationContextProvider;
+import com.fmt.educafloripa.infra.exception.error.UnauthorizedRole;
 import com.fmt.educafloripa.service.impl.UsuarioServiceImpl;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -36,7 +37,7 @@ public class AcessoUtil {
             }
         }
 
-        throw new RuntimeException();
+        throw new UnauthorizedRole();
     }
 
     private static void nivelAcesso(String token, Long nivel, JwtDecoder jwtDecoder, UsuarioServiceImpl usuarioService) {
@@ -49,7 +50,7 @@ public class AcessoUtil {
         UsuarioEntity usuario = usuarioService.pegarEntityPorId(idUsuario);
 
         if (usuario.getPapel().getId() > nivel) {
-            throw new RuntimeException();
+            throw new UnauthorizedRole();
         }
     }
 }

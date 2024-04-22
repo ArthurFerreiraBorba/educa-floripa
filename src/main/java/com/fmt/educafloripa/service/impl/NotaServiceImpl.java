@@ -7,6 +7,7 @@ import com.fmt.educafloripa.entity.AlunoEntity;
 import com.fmt.educafloripa.entity.DocenteEntity;
 import com.fmt.educafloripa.entity.MateriaEntity;
 import com.fmt.educafloripa.entity.NotaEntity;
+import com.fmt.educafloripa.infra.exception.error.InvalidEntity;
 import com.fmt.educafloripa.infra.generics.GenericService;
 import com.fmt.educafloripa.repository.NotaRepository;
 import com.fmt.educafloripa.service.NotaService;
@@ -49,10 +50,10 @@ public class NotaServiceImpl extends GenericService<NotaEntity, NotaResponse, No
         MateriaEntity materia = materiaService.pegarEntityPorId(requestDto.materia());
 
         if (aluno.getTurma().getProfessor() != professor) {
-            throw new RuntimeException();
+            throw new InvalidEntity("O professor " + professor.getNome() + " não esta na turma do aluno " + aluno.getNome());
         }
         if (aluno.getTurma().getCurso() != materia.getCurso()) {
-            throw new RuntimeException();
+            throw new InvalidEntity("O aluno " + aluno.getNome() + " não tem essa meteria");
         }
 
         NotaEntity notaAtualizado = new NotaEntity(requestDto, aluno, professor, materia);
@@ -75,10 +76,10 @@ public class NotaServiceImpl extends GenericService<NotaEntity, NotaResponse, No
         MateriaEntity materia = materiaService.pegarEntityPorId(requestDto.materia());
 
         if (aluno.getTurma().getProfessor() != professor) {
-            throw new RuntimeException();
+            throw new InvalidEntity("O professor " + professor.getNome() + " não esta na turma do aluno " + aluno.getNome());
         }
         if (aluno.getTurma().getCurso() != materia.getCurso()) {
-            throw new RuntimeException();
+            throw new InvalidEntity("O aluno " + aluno.getNome() + " não participa dessa meteria");
         }
 
         NotaEntity entity = new NotaEntity(requestDto, aluno, professor, materia);

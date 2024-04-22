@@ -6,6 +6,7 @@ import com.fmt.educafloripa.entity.AlunoEntity;
 import com.fmt.educafloripa.entity.DocenteEntity;
 import com.fmt.educafloripa.entity.TurmaEntity;
 import com.fmt.educafloripa.entity.UsuarioEntity;
+import com.fmt.educafloripa.infra.exception.error.InvalidRole;
 import com.fmt.educafloripa.infra.generics.GenericService;
 import com.fmt.educafloripa.repository.AlunoRepository;
 import com.fmt.educafloripa.service.AlunoService;
@@ -38,7 +39,7 @@ public class AlunoServiceImpl extends GenericService<AlunoEntity, AlunoResponse,
         TurmaEntity turma = turmaService.pegarEntityPorId(requestDto.turma());
 
         if (usuario.getPapel().getId() != 5) {
-            throw new RuntimeException();
+            throw new InvalidRole("Somente usuários com o papel de ALUNO podem ser cadastrados como alunos");
         }
 
         return new AlunoEntity(requestDto, turma, usuario);
